@@ -14,6 +14,10 @@ const url = require('url');
 
 ////////////////////////////
 // SERVER
+
+ const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
+ const dataObj = JSON.parse(data);
+
  const server = http.createServer((req, res) =>  {
      const pathName = req.url;
 
@@ -21,6 +25,9 @@ const url = require('url');
          res.end('This is the OVERVIEW');
      } else if (pathName === '/product') {
          res.end('This is the PRODUCT');
+     } else if (pathName ==='/api') {
+        res.writeHead(200, { 'Content-type': 'application/json'})
+        res.end(data);
      } else {
          // specify an object with the headers you want to send
          res.writeHead(404, {
