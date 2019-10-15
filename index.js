@@ -2,8 +2,6 @@ const fs = require('fs');
 const http = require('http');
 const url = require('url');
 
-
-
 //synchronous or blocking code execution
 // const textIn = fs.readFileSync('./txt/input.txt', 'utf-8');
 // console.log(textIn);
@@ -38,10 +36,11 @@ const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.htm
 
 
  const server = http.createServer((req, res) =>  {
-     const pathName = req.url;
+     const { query, pathname } = url.parse(req.url, true);
+    //  const pathName = req.url;
 
 // OVERVIEW PAGE
-     if(pathName === '/' || pathName === '/overview') {
+     if(pathname === '/' || pathname === '/overview') {
          
          res.writeHead(200, { 'Content-type': 'text/html'})
 
@@ -51,11 +50,15 @@ const tempProduct = fs.readFileSync(`${__dirname}/templates/template-product.htm
          res.end(output);
 
 // PRODUCT PAGE
-     } else if (pathName === '/product') {
-         res.end('This is the PRODUCT');
+     } else if (pathname === '/product') {
+         // simplest way of retrieving an object based on a query string
+         const product = dataObj[query.id];
+         const output = replaceTemplate(tempProduct, product);
+
+         res.end(output);
 
 // API
-     } else if (pathName ==='/api') {
+     } else if (pathname ==='/api') {
         res.writeHead(200, { 'Content-type': 'application/json'})
         res.end(data);
 
